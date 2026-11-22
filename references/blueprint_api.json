@@ -1,0 +1,989 @@
+{
+    "skill":  "UE_BP_Skill_Test",
+    "engine":  "5.8.0-55116800+++UE5+Release-5.8",
+    "schema_note":  "ONLY UFUNCTION-exposed members are listed - that is the Python surface. Private C++ inline helpers are excluded because Python cannot call them. cpp_params are verbatim C++; Python argument order is identical and names are snake_case.",
+    "authority":  {
+                      "python_docs":  "https://dev.epicgames.com/documentation/en-us/unreal-engine/python-api/class/BlueprintGraphEditor",
+                      "headers":  [
+                                      "Engine/Source/Editor/BlueprintEditorLibrary/Private/BlueprintEditorLibrary/BlueprintGraphEditor.h",
+                                      "Engine/Source/Editor/BlueprintEditorLibrary/Public/BlueprintEditorLibrary.h",
+                                      "Engine/Source/Editor/BlueprintEditorLibrary/Public/BlueprintEditorLibrary/BlueprintGraphPin.h"
+                                  ],
+                      "module_dll":  "Engine/Binaries/Win64/UnrealEditor-BlueprintEditorLibrary.dll"
+                  },
+    "portability":  {
+                        "layer_1_engine_native":  [
+                                                      "unreal.BlueprintGraphEditor",
+                                                      "unreal.BlueprintEditorLibrary",
+                                                      "unreal.BlueprintGraphPinLibrary"
+                                                  ],
+                        "layer_2_editor_toolset":  [
+                                                       "unreal.ToolsetRegistry"
+                                                   ],
+                        "layer_3_project_private_not_engine":  [
+                                                                   "unreal.BlueprintTools",
+                                                                   "unreal.LookDevAuthoringLibrary"
+                                                               ]
+                    },
+    "capability":  {
+                       "python_can":  [
+                                          "create function graphs",
+                                          "create nodes via specific factories",
+                                          "create nodes by palette name",
+                                          "connect and disconnect pins",
+                                          "set literal pin values",
+                                          "add/remove member and local variables",
+                                          "graph input/output parameters",
+                                          "function flags",
+                                          "dynamic pins on variadic nodes",
+                                          "retarget node class",
+                                          "comment nodes",
+                                          "list/filter nodes and diagnostics",
+                                          "compile and save"
+                                      ],
+                       "python_cannot":  [
+                                             "author UMG widget trees",
+                                             "reach Niagara or material graphs directly",
+                                             "verify anything visual headless",
+                                             "create an arbitrary node from a C++ class name"
+                                         ]
+                   },
+    "libraries":  [
+                      {
+                          "python_name":  "unreal.BlueprintGraphEditor",
+                          "cpp_type":  "UBlueprintGraphEditor",
+                          "source":  "Private/BlueprintEditorLibrary/BlueprintGraphEditor.h",
+                          "ufunction_count":  56,
+                          "methods":  [
+                                          {
+                                              "name":  "CreateAndEditFunctionGraph",
+                                              "returns":  "UBlueprintGraphEditor*",
+                                              "cpp_params":  "UBlueprint* Blueprint, const FString\u0026 FuncName = FString(TEXT(\"NewFunction\"))",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetGraphEditorByName",
+                                              "returns":  "UBlueprintGraphEditor*",
+                                              "cpp_params":  "UBlueprint* InBlueprint, FName GraphName",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetGraphEditor",
+                                              "returns":  "UBlueprintGraphEditor*",
+                                              "cpp_params":  "UEdGraph* InGraph",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetGraph",
+                                              "returns":  "UEdGraph*",
+                                              "cpp_params":  ") const { return Graph; }",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListAllNodes",
+                                              "returns":  "void",
+                                              "cpp_params":  "TArray\u003cUK2Node*\u003e\u0026 OutNodes",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListNodesOfClass",
+                                              "returns":  "void",
+                                              "cpp_params":  "TArray\u003cUK2Node*\u003e\u0026 OutNodes, TSubclassOf\u003cUK2Node\u003e Class",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListNodesWithErrors",
+                                              "returns":  "void",
+                                              "cpp_params":  "TArray\u003cUK2Node*\u003e\u0026 OutNodes",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListNodesWithWarnings",
+                                              "returns":  "void",
+                                              "cpp_params":  "TArray\u003cUK2Node*\u003e\u0026 OutNodes",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListNodesWithNotes",
+                                              "returns":  "void",
+                                              "cpp_params":  "TArray\u003cUK2Node*\u003e\u0026 OutNodes",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListAvailableNodes",
+                                              "returns":  "void",
+                                              "cpp_params":  "TArray\u003cFString\u003e\u0026 Result, const TArray\u003cFBlueprintGraphPin\u003e\u0026 ContextPins) const;",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "CreateNodeFromName",
+                                              "returns":  "UEdGraphNode*",
+                                              "cpp_params":  "const FString\u0026 NodeWithCategory, FVector2D const Location, const TArray\u003cFBlueprintGraphPin\u003e\u0026 ContextPins, UClass* DeclaringClass = nullptr",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddGraphInputParameter",
+                                              "returns":  "FBlueprintGraphPin",
+                                              "cpp_params":  "FName InputName, const FEdGraphPinType\u0026 PinType = FEdGraphPinType(), const FString\u0026 Value = FString()",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RemoveGraphInputParameter",
+                                              "returns":  "bool",
+                                              "cpp_params":  "FName InputName",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "FindGraphEntryPin",
+                                              "returns":  "FBlueprintGraphPin",
+                                              "cpp_params":  ") const;",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "FindEventNode",
+                                              "returns":  "UK2Node_Event*",
+                                              "cpp_params":  "FName EventName) const;",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddGraphOutputParameter",
+                                              "returns":  "UK2Node_FunctionResult*",
+                                              "cpp_params":  "FName OutputName, const FEdGraphPinType\u0026 PinType = FEdGraphPinType()",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RemoveGraphOutputParameter",
+                                              "returns":  "bool",
+                                              "cpp_params":  "FName OutputName",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListLocalVariableNames",
+                                              "returns":  "void",
+                                              "cpp_params":  "TArray\u003cFString\u003e\u0026 OutLocalVariableNames) const;",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetLocalVariableType",
+                                              "returns":  "TOptional\u003cFEdGraphPinType\u003e",
+                                              "cpp_params":  "const FString\u0026 LocalVariableName) const;",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetLocalVariableDefaultValue",
+                                              "returns":  "TOptional\u003cFString\u003e",
+                                              "cpp_params":  "const FString\u0026 LocalVariableName) const;",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetLocalVariableDefaultValue",
+                                              "returns":  "bool",
+                                              "cpp_params":  "const FString\u0026 LocalVariableName, const FString\u0026 NewDefaultValue",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddLocalVariable",
+                                              "returns":  "bool",
+                                              "cpp_params":  "FName LocalName, const FEdGraphPinType\u0026 PinType = FEdGraphPinType(), const FString\u0026 Value = FString()",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RemoveLocalVariable",
+                                              "returns":  "bool",
+                                              "cpp_params":  "FName LocalName",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddMemberVariable",
+                                              "returns":  "bool",
+                                              "cpp_params":  "FName MemberName,  const FEdGraphPinType\u0026 PinType = FEdGraphPinType(), const FString\u0026 Value = FString()",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RemoveMemberVariable",
+                                              "returns":  "bool",
+                                              "cpp_params":  "FName MemberName",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetIsPureFunction",
+                                              "returns":  "void",
+                                              "cpp_params":  "bool bIsPure = true",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetIsCallInEditorFunction",
+                                              "returns":  "void",
+                                              "cpp_params":  "bool bCallInEditor = true",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetFunctionIsPublic",
+                                              "returns":  "void",
+                                              "cpp_params":  "",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetFunctionIsProtected",
+                                              "returns":  "void",
+                                              "cpp_params":  "",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetFunctionIsPrivate",
+                                              "returns":  "void",
+                                              "cpp_params":  "",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetIsConstFunction",
+                                              "returns":  "void",
+                                              "cpp_params":  "bool bIsConst = true",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetIsExecFunction",
+                                              "returns":  "void",
+                                              "cpp_params":  "bool bIsExec = true",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetIsThreadSafeFunction",
+                                              "returns":  "void",
+                                              "cpp_params":  "bool bIsThreadSafe = true",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetIsUnsafeDuringActorConstructionFunction",
+                                              "returns":  "void",
+                                              "cpp_params":  "bool bIsUnsafeDuringActorConstruction = true",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetIsDeprecatedFunction",
+                                              "returns":  "void",
+                                              "cpp_params":  "bool bIsDeprecated = true",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetDeprecationMessageOnFunction",
+                                              "returns":  "void",
+                                              "cpp_params":  "FText Message",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddCallFunctionNode",
+                                              "returns":  "UK2Node_CallFunction*",
+                                              "cpp_params":  "const FString\u0026 FunctionPath",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddMacroNode",
+                                              "returns":  "UK2Node_MacroInstance*",
+                                              "cpp_params":  "const FString\u0026 MacroPath",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddBranchNode",
+                                              "returns":  "UK2Node_IfThenElse*",
+                                              "cpp_params":  "",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddReturnNode",
+                                              "returns":  "UK2Node_FunctionResult*",
+                                              "cpp_params":  "",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddGetMemberVariableNode",
+                                              "returns":  "UK2Node_VariableGet*",
+                                              "cpp_params":  "FName MemberName, const FString\u0026 ClassPath = FString()",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddSetMemberVariableNode",
+                                              "returns":  "UK2Node_VariableSet*",
+                                              "cpp_params":  "FName MemberName, const FString\u0026 ClassPath = FString()",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddGetLocalVariableNode",
+                                              "returns":  "UK2Node_VariableGet*",
+                                              "cpp_params":  "FName LocalName",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddSetLocalVariableNode",
+                                              "returns":  "UK2Node_VariableSet*",
+                                              "cpp_params":  "FName LocalName",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddCustomEventNode",
+                                              "returns":  "UK2Node_CustomEvent*",
+                                              "cpp_params":  "const FString\u0026 EventName",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddDispatcherEventNode",
+                                              "returns":  "UK2Node_Event*",
+                                              "cpp_params":  "FName DispatcherName, UClass* DeclaringClass = nullptr",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RetargetNodeClass",
+                                              "returns":  "bool",
+                                              "cpp_params":  "UEdGraphNode* Node, UClass* OldClass, UClass* NewClass",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListComponentEvents",
+                                              "returns":  "TArray\u003cFName\u003e",
+                                              "cpp_params":  "UActorComponent* Component) const;",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddComponentBoundEventNode",
+                                              "returns":  "UK2Node_ComponentBoundEvent*",
+                                              "cpp_params":  "",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddCommentNode",
+                                              "returns":  "UEdGraphNode_Comment*",
+                                              "cpp_params":  "const FString\u0026 CommentText, FVector2D Location, FVector2D Size = FVector2D(400, 200)",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddCommentToNodes",
+                                              "returns":  "UEdGraphNode_Comment*",
+                                              "cpp_params":  "const FString\u0026 CommentText, const TArray\u003cUK2Node*\u003e\u0026 Nodes, int32 Padding = 50",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListCommentNodes",
+                                              "returns":  "TArray\u003cUEdGraphNode_Comment*\u003e",
+                                              "cpp_params":  ") const;",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RemoveCommentNode",
+                                              "returns":  "void",
+                                              "cpp_params":  "UEdGraphNode_Comment* CommentNode",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddNodePin",
+                                              "returns":  "bool",
+                                              "cpp_params":  "UEdGraphNode* Node",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RemoveNodePin",
+                                              "returns":  "bool",
+                                              "cpp_params":  "UEdGraphNode* Node, const FBlueprintGraphPin\u0026 Pin",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RemoveNodes",
+                                              "returns":  "void",
+                                              "cpp_params":  "const TArray\u003cUK2Node*\u003e\u0026 Nodes",
+                                              "blueprint_callable":  true
+                                          }
+                                      ]
+                      },
+                      {
+                          "python_name":  "unreal.BlueprintEditorLibrary",
+                          "cpp_type":  "UBlueprintEditorLibrary",
+                          "source":  "Public/BlueprintEditorLibrary.h",
+                          "ufunction_count":  81,
+                          "methods":  [
+                                          {
+                                              "name":  "ReplaceVariableReferences",
+                                              "returns":  "void",
+                                              "cpp_params":  "UBlueprint* Blueprint, const FName OldVarName, const FName NewVarName",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "FindEventGraph",
+                                              "returns":  "UEdGraph*",
+                                              "cpp_params":  "UBlueprint* Blueprint",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "CompareAssetSaveVersionTo",
+                                              "returns":  "void",
+                                              "cpp_params":  "const UObject* Asset, const FString\u0026 VersionToCheck, EAssetSaveVersionComparisonResults\u0026 Result",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "CompareSoftObjectSaveVersionTo",
+                                              "returns":  "void",
+                                              "cpp_params":  "const TSoftObjectPtr\u003cUObject\u003e ObjectToCheck,  const FString\u0026 VersionToCheck, EAssetSaveVersionComparisonResults\u0026 Result",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetSavedByEngineVersion",
+                                              "returns":  "FString",
+                                              "cpp_params":  "const UObject* Asset",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetCurrentEngineVersion",
+                                              "returns":  "FString",
+                                              "cpp_params":  "",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "FindGraph",
+                                              "returns":  "UEdGraph*",
+                                              "cpp_params":  "UBlueprint* Blueprint, FName GraphName",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListGraphs",
+                                              "returns":  "TArray\u003cUEdGraph*\u003e",
+                                              "cpp_params":  "UBlueprint* Blueprint",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "UpgradeOperatorNodes",
+                                              "returns":  "void",
+                                              "cpp_params":  "UBlueprint* Blueprint",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "CompileBlueprint",
+                                              "returns":  "bool",
+                                              "cpp_params":  "UBlueprint* Blueprint",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddFunctionGraph",
+                                              "returns":  "UEdGraph*",
+                                              "cpp_params":  "UBlueprint* Blueprint, const FString\u0026 FuncName = FString(TEXT(\"NewFunction\"))",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListFunctions",
+                                              "returns":  "TArray\u003cFBlueprintFunctionInfo\u003e",
+                                              "cpp_params":  "UBlueprint* Blueprint",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListEvents",
+                                              "returns":  "TArray\u003cFBlueprintFunctionInfo\u003e",
+                                              "cpp_params":  "UBlueprint* Blueprint",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddFunctionOverride",
+                                              "returns":  "UEdGraph*",
+                                              "cpp_params":  "UBlueprint* Blueprint, FName FunctionName",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddEventOverride",
+                                              "returns":  "UK2Node_Event*",
+                                              "cpp_params":  "UBlueprint* Blueprint, FName EventName,",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RemoveFunctionGraph",
+                                              "returns":  "void",
+                                              "cpp_params":  "UBlueprint* Blueprint, FName FuncName",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RemoveUnusedNodes",
+                                              "returns":  "void",
+                                              "cpp_params":  "UBlueprint* Blueprint",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RemoveGraph",
+                                              "returns":  "void",
+                                              "cpp_params":  "UBlueprint* Blueprint, UEdGraph* Graph",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RenameGraph",
+                                              "returns":  "void",
+                                              "cpp_params":  "UEdGraph* Graph, const FString\u0026 NewNameStr = FString(TEXT(\"NewGraph\"))",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetBlueprintAsset",
+                                              "returns":  "UBlueprint*",
+                                              "cpp_params":  "UObject* Object",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetBlueprintForClass",
+                                              "returns":  "UBlueprint*",
+                                              "cpp_params":  "UClass* Class, bool\u0026 bDoesClassHaveBlueprint",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RefreshOpenEditorsForBlueprint",
+                                              "returns":  "void",
+                                              "cpp_params":  "const UBlueprint* BP",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RefreshAllOpenBlueprintEditors",
+                                              "returns":  "void",
+                                              "cpp_params":  "",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetBlueprintParentClass",
+                                              "returns":  "UClass*",
+                                              "cpp_params":  "const UBlueprint* Blueprint",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ReparentBlueprint",
+                                              "returns":  "void",
+                                              "cpp_params":  "UBlueprint* Blueprint, UClass* NewParentClass",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RemoveUnusedVariables",
+                                              "returns":  "int32",
+                                              "cpp_params":  "UBlueprint* Blueprint",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GeneratedClass",
+                                              "returns":  "UClass*",
+                                              "cpp_params":  "UBlueprint* BlueprintObj",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ChangeMemberVariableType",
+                                              "returns":  "void",
+                                              "cpp_params":  "UBlueprint* Blueprint, const FName\u0026 VariableName, const FEdGraphPinType\u0026 NewType",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetBlueprintVariableExposeOnSpawn",
+                                              "returns":  "void",
+                                              "cpp_params":  "UBlueprint* Blueprint, const FName\u0026 VariableName, bool bExposeOnSpawn",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetBlueprintVariableExposeToCinematics",
+                                              "returns":  "void",
+                                              "cpp_params":  "UBlueprint* Blueprint, const FName\u0026 VariableName, bool bExposeToCinematics",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetBlueprintVariableInstanceEditable",
+                                              "returns":  "void",
+                                              "cpp_params":  "UBlueprint* Blueprint, const FName\u0026 VariableName, bool bInstanceEditable",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetBlueprintVariableReplication",
+                                              "returns":  "EBlueprintVariableReplication",
+                                              "cpp_params":  "",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetBlueprintVariableReplication",
+                                              "returns":  "void",
+                                              "cpp_params":  "UBlueprint* Blueprint, const FName\u0026 VariableName,",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetBlueprintVariableCategory",
+                                              "returns":  "FText",
+                                              "cpp_params":  "UBlueprint* Blueprint, const FName\u0026 VariableName",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetBlueprintVariableCategory",
+                                              "returns":  "void",
+                                              "cpp_params":  "UBlueprint* Blueprint, const FName\u0026 VariableName, const FText\u0026 NewCategory",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetCommentText",
+                                              "returns":  "FString",
+                                              "cpp_params":  "const UEdGraphNode_Comment* CommentNode",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetCommentText",
+                                              "returns":  "void",
+                                              "cpp_params":  "UEdGraphNode_Comment* CommentNode, const FString\u0026 NewText",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetCommentColor",
+                                              "returns":  "FLinearColor",
+                                              "cpp_params":  "const UEdGraphNode_Comment* CommentNode",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetCommentColor",
+                                              "returns":  "void",
+                                              "cpp_params":  "UEdGraphNode_Comment* CommentNode, FLinearColor Color",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetNodesInComment",
+                                              "returns":  "TArray\u003cUK2Node*\u003e",
+                                              "cpp_params":  "const UEdGraphNode_Comment* CommentNode",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetNodeSize",
+                                              "returns":  "FVector2D",
+                                              "cpp_params":  "const UEdGraphNode* Node",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "CreateBlueprintAssetWithParent",
+                                              "returns":  "UBlueprint*",
+                                              "cpp_params":  "const FString\u0026 AssetPath, UClass* ParentClass",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListGraphNames",
+                                              "returns":  "void",
+                                              "cpp_params":  "const UBlueprint* Blueprint, TArray\u003cFName\u003e\u0026 OutGraphNames",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListMemberVariableNames",
+                                              "returns":  "void",
+                                              "cpp_params":  "const UBlueprint* Blueprint, TArray\u003cFString\u003e\u0026 OutMemberVariableNames, bool bIncludeInheritedMembers = true",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetMemberVariableType",
+                                              "returns":  "TOptional\u003cFEdGraphPinType\u003e",
+                                              "cpp_params":  "const UBlueprint* Blueprint, const FString\u0026 MemberVariableName",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddMemberVariableWithValue",
+                                              "returns":  "bool",
+                                              "cpp_params":  "UBlueprint* Blueprint, FName MemberName, const int32\u0026 DefaultValue",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddMemberVariable",
+                                              "returns":  "bool",
+                                              "cpp_params":  "UBlueprint* Blueprint, FName MemberName, const FEdGraphPinType\u0026 VariableType",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddEventDispatcher",
+                                              "returns":  "bool",
+                                              "cpp_params":  "UBlueprint* Blueprint, FName Name",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RemoveEventDispatcher",
+                                              "returns":  "bool",
+                                              "cpp_params":  "UBlueprint* Blueprint, FName Name",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListEventDispatchers",
+                                              "returns":  "TArray\u003cFName\u003e",
+                                              "cpp_params":  "const UBlueprint* Blueprint",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "AddEventDispatcherParameter",
+                                              "returns":  "bool",
+                                              "cpp_params":  "UBlueprint* Blueprint, FName DispatcherName,",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "RemoveEventDispatcherParameter",
+                                              "returns":  "bool",
+                                              "cpp_params":  "UBlueprint* Blueprint, FName DispatcherName,",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetBasicTypeByName",
+                                              "returns":  "FEdGraphPinType",
+                                              "cpp_params":  "FName TypeName",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetStructType",
+                                              "returns":  "FEdGraphPinType",
+                                              "cpp_params":  "const UScriptStruct* StructType",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetClassReferenceType",
+                                              "returns":  "FEdGraphPinType",
+                                              "cpp_params":  "const UClass* ClassType",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetObjectReferenceType",
+                                              "returns":  "FEdGraphPinType",
+                                              "cpp_params":  "const UClass* ObjectType",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetArrayType",
+                                              "returns":  "FEdGraphPinType",
+                                              "cpp_params":  "const FEdGraphPinType\u0026 ContainedType",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetSetType",
+                                              "returns":  "FEdGraphPinType",
+                                              "cpp_params":  "const FEdGraphPinType\u0026 ContainedType",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetMapType",
+                                              "returns":  "FEdGraphPinType",
+                                              "cpp_params":  "const FEdGraphPinType\u0026 KeyType,const FEdGraphPinType\u0026 ValueType",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "PinTypeToJsonSchema",
+                                              "returns":  "FString",
+                                              "cpp_params":  "const FEdGraphPinType\u0026 PinType, const UClass* SelfContext",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListAllPins",
+                                              "returns":  "TArray\u003cFBlueprintGraphPin\u003e",
+                                              "cpp_params":  "const UK2Node* Node, TEnumAsByte\u003cEEdGraphPinDirection\u003e InDirection = EEdGraphPinDirection::EGPD_MAX",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListInputPins",
+                                              "returns":  "TArray\u003cFBlueprintGraphPin\u003e",
+                                              "cpp_params":  "const UK2Node* Node",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListOutputPins",
+                                              "returns":  "TArray\u003cFBlueprintGraphPin\u003e",
+                                              "cpp_params":  "const UK2Node* Node",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "FindInputPinByIndex",
+                                              "returns":  "FBlueprintGraphPin",
+                                              "cpp_params":  "const UK2Node* Node, int32 Index, const FEdGraphPinType\u0026 Type = FEdGraphPinType()",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "FindInputPin",
+                                              "returns":  "FBlueprintGraphPin",
+                                              "cpp_params":  "const UK2Node* Node, FName PinName, const FEdGraphPinType\u0026 Type = FEdGraphPinType()",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "FindOutputPinByIndex",
+                                              "returns":  "FBlueprintGraphPin",
+                                              "cpp_params":  "const UK2Node* Node, int32 Index, const FEdGraphPinType\u0026 Type = FEdGraphPinType()",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "FindOutputPin",
+                                              "returns":  "FBlueprintGraphPin",
+                                              "cpp_params":  "const UK2Node* Node, FName PinName, const FEdGraphPinType\u0026 Type = FEdGraphPinType()",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "FindExecutePin",
+                                              "returns":  "FBlueprintGraphPin",
+                                              "cpp_params":  "const UK2Node* Node",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "FindThenPin",
+                                              "returns":  "FBlueprintGraphPin",
+                                              "cpp_params":  "const UK2Node* Node",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "FindSelfPin",
+                                              "returns":  "FBlueprintGraphPin",
+                                              "cpp_params":  "const UK2Node* Node",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "FindResultPin",
+                                              "returns":  "FBlueprintGraphPin",
+                                              "cpp_params":  "const UK2Node* Node",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "FindDataInputPin",
+                                              "returns":  "FBlueprintGraphPin",
+                                              "cpp_params":  "const UK2Node* Node",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetNodePos",
+                                              "returns":  "void",
+                                              "cpp_params":  "UK2Node* Node, FIntPoint pos",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetNodePos",
+                                              "returns":  "FIntPoint",
+                                              "cpp_params":  "const UK2Node* Node",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetNodeTitle",
+                                              "returns":  "FString",
+                                              "cpp_params":  "const UK2Node* Node",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetNodeCategory",
+                                              "returns":  "FString",
+                                              "cpp_params":  "const UK2Node* Node",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetCreateDelegateFunction",
+                                              "returns":  "void",
+                                              "cpp_params":  "UK2Node_CreateDelegate* Node, FName FunctionName",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetCreateDelegateFunction",
+                                              "returns":  "FName",
+                                              "cpp_params":  "const UK2Node_CreateDelegate* Node",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListCompatibleFunctionsForDelegate",
+                                              "returns":  "TArray\u003cFName\u003e",
+                                              "cpp_params":  "const UK2Node_CreateDelegate* Node",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "FindElsePin",
+                                              "returns":  "FBlueprintGraphPin",
+                                              "cpp_params":  "const UK2Node_IfThenElse* Node",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "FindConditionPin",
+                                              "returns":  "FBlueprintGraphPin",
+                                              "cpp_params":  "const UK2Node_IfThenElse* Node",
+                                              "blueprint_callable":  true
+                                          }
+                                      ]
+                      },
+                      {
+                          "python_name":  "unreal.BlueprintGraphPinLibrary",
+                          "cpp_type":  "UBlueprintGraphPinLibrary",
+                          "source":  "Public/BlueprintEditorLibrary/BlueprintGraphPin.h",
+                          "ufunction_count":  15,
+                          "methods":  [
+                                          {
+                                              "name":  "IsValid",
+                                              "returns":  "bool",
+                                              "cpp_params":  "const FBlueprintGraphPin\u0026 Pin",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "IsSameNativePin",
+                                              "returns":  "bool",
+                                              "cpp_params":  "const FBlueprintGraphPin\u0026 Pin, const FBlueprintGraphPin\u0026 Other",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "SetPinValue",
+                                              "returns":  "bool",
+                                              "cpp_params":  "const FBlueprintGraphPin\u0026 Pin, const FString\u0026 Value",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "TryCreateConnection",
+                                              "returns":  "bool",
+                                              "cpp_params":  "const FBlueprintGraphPin\u0026 Pin, const FBlueprintGraphPin\u0026 Other",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "CanCreateConnection",
+                                              "returns":  "bool",
+                                              "cpp_params":  "const FBlueprintGraphPin\u0026 Pin, const FBlueprintGraphPin\u0026 Other",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "BreakPinLinks",
+                                              "returns":  "bool",
+                                              "cpp_params":  "const FBlueprintGraphPin\u0026 Pin",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "BreakSinglePinLink",
+                                              "returns":  "bool",
+                                              "cpp_params":  "const FBlueprintGraphPin\u0026 Pin, const FBlueprintGraphPin\u0026 Other",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetPinName",
+                                              "returns":  "FName",
+                                              "cpp_params":  "const FBlueprintGraphPin\u0026 Pin",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetPinDirection",
+                                              "returns":  "TEnumAsByte\u003cEEdGraphPinDirection\u003e",
+                                              "cpp_params":  "const FBlueprintGraphPin\u0026 Pin",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetPinTypeAsJsonSchema",
+                                              "returns":  "FString",
+                                              "cpp_params":  "const FBlueprintGraphPin\u0026 Pin",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetPinTypeDisplayString",
+                                              "returns":  "FText",
+                                              "cpp_params":  "const FBlueprintGraphPin\u0026 Pin",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetPinType",
+                                              "returns":  "FEdGraphPinType",
+                                              "cpp_params":  "const FBlueprintGraphPin\u0026 Pin",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetPinValue",
+                                              "returns":  "FString",
+                                              "cpp_params":  "const FBlueprintGraphPin\u0026 Pin",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "GetOwningNode",
+                                              "returns":  "UK2Node*",
+                                              "cpp_params":  "const FBlueprintGraphPin\u0026 Pin",
+                                              "blueprint_callable":  true
+                                          },
+                                          {
+                                              "name":  "ListConnectedPins",
+                                              "returns":  "TArray\u003cFBlueprintGraphPin\u003e",
+                                              "cpp_params":  "const FBlueprintGraphPin\u0026 Pin",
+                                              "blueprint_callable":  true
+                                          }
+                                      ]
+                      }
+                  ]
+}
