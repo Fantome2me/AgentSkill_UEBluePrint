@@ -1,5 +1,7 @@
 # Agent Skill —— Unreal Engine 蓝图 / 材质 / UMG / Niagara 图操作
 
+![UE Graph Skill](docs/social_preview.png)
+
 > 一套给 AI Agent 用的 **Unreal Engine 5.8 图操作技能包**：先用 Python 判断你在操作哪种子系统，
 > 再按对应子系统的正确 API 去建图、改图、审计图，最后把图画成**手接线的样子**而不是把节点全丢在原点。
 
@@ -32,7 +34,7 @@ Level / 地图 / Actor / 配置                       →  EditorActorSubsystem,
 
 ---
 
-## 执行循环
+## 执行循环（Step 0 → 9，十步）
 
 ```
 0. PRE-FLIGHT   编辑器关掉 / 进程干净 / 资产可写 / 有回滚空间
@@ -178,7 +180,7 @@ Copy-Item -Recurse .\* "$env:USERPROFILE\.dsh\skills\ue-bp-skill-v2\"
 用的时候，Agent 应当：
 
 1. 先读 `SKILL.md`，按 **Step 0** 做路由
-2. 按 **Step 1** 的九步循环执行
+2. 按 **Step 1** 的十步循环（Step 0 → 9）执行
 3. 遇到具体问题查 `references/` 里对应的文件
 4. 改完图之后跑一次排版审计
 
