@@ -128,6 +128,61 @@ in a `-run=pythonscript` commandlet.
 
 ---
 
+## R12 — Type every pin before wiring it, in materials above all [实测]
+
+Material pins carry a component count and the compiler enforces it. The cast rules are
+asymmetric, and that asymmetry is the whole trap:
+
+| Cast | Allowed | Result |
+|---|---|---|
+| scalar -> 2/3/4 | implicit | broadcast |
+| 2 -> 3/4, 3 -> 4 | implicit | zero-filled tail |
+| 4 -> 3 -> 2 -> 1 | **refused** | `Cannot cast from larger float type to smaller float type` |
+
+So: **downcast needs an explicit `ComponentMask`; upcast does not.** Before drawing an
+edge, state both ends' width out loud (or in the report). A Python call that creates the
+node and the edge still returns success while the material turns red - the error lives in
+the material compiler, not in the API.
+
+`ComponentMask` is the only sanctioned cast, and it has three sharp edges:
+
+1. Its output width is the **number of enabled channels**. A mask left at the default
+   (R and G) emits a float2 and will fail the same way when it reaches a scalar pin.
+2. The **default is R+G, not R**. Set all four flags explicitly at creation, always.
+3. It **cannot reorder**. BGR needs two single-channel masks plus `AppendVector`.
+
+Catalogue: `references/45-material-and-other-graphs.md` -> "material pins are TYPED".
+
+## R13 — A material is not finished until it compiles clean [实测]
+
+`recompile_material(mat)` returns a bool, and `False` is a hard failure, not a warning.
+The mandatory order, with no step skippable:
+
+```text
+wire -> recompile -> assert the bool -> scan Saved/Logs for the material -> save -> prove
+```
+
+Saving before the compile assertion is how a broken graph reaches disk carrying a success
+report. In this engine a shader compile failure resurfaces later as
+`Shader compilation failures are Fatal` at PSO creation, with a stack that points at the
+renderer rather than at the graph that caused it - at which point the original edit is
+hours behind you.
+
+Two checks, because they fail differently:
+
+```python
+ok = MEL.recompile_material(mat)          # in-memory compile
+if not ok:
+    raise RuntimeError("material did not compile")
+```
+
+```powershell
+Select-String -Path "<Project>/Saved/Logs/*.log" -Pattern "Cannot cast|Missing input|Error.*<MaterialName>"
+```
+
+The bool catches "it failed"; the log tells you *which pin*. Neither alone is enough.
+---
+
 # Part 2 — Trap catalogue
 
 ## 2.1 Graph creation and identity

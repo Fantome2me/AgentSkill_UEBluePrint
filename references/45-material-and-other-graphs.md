@@ -112,6 +112,99 @@ mat.set_editor_property("bOutputTranslucentVelocity", True)
 
 It is a plain `UPROPERTY`, readable and writable from Python.
 
+### Rule: material pins are TYPED, and the type is enforced at compile time
+
+Every pin in a material graph has a component count: 1 (scalar), 2, 3 or 4. Wiring is not
+duck-typed - the compiler refuses a connection it cannot cast, and the failure is a
+material compile error, not a Python exception. That asymmetry is what makes this the
+most expensive class of material bug: **the API call succeeds, the asset saves, and the
+material is red.**
+
+Two directions, and only one of them is implicit:
+
+| Cast | Allowed? | What happens |
+|---|---|---|
+| scalar -> 2/3/4 | **yes, implicit** | broadcast into every channel |
+| 2 -> 3/4, 3 -> 4 | **yes, implicit** | the missing channels are filled with 0 |
+| 4 -> 3 -> 2 -> 1 | **NO** | `Cannot cast from larger float type to smaller float type` |
+
+So the rule is one line long:
+
+> **Downcast needs an explicit mask. Upcast does not.**
+
+Before wiring, know the width of both ends. The widths that come up constantly:
+
+```text
+MaterialExpressionTime                1
+MaterialExpressionFresnel             1
+MaterialExpressionScalarParameter     1
+MaterialExpressionTextureCoordinate   2
+MaterialExpressionPanner             2 in, 2 out
+TextureSample / TextureSampleParameter2D   UV 2, RGB 3, RGBA 4, R 1
+MaterialExpressionVertexColor         4
+MaterialExpressionCameraVectorWS      3
+MaterialExpressionWorldPosition       3
+MaterialExpressionComponentMask       N out, where N = number of enabled channels
+```
+
+A float4 that is about to feed a float3 pin needs `ComponentMask(RGB)` in between. Wiring
+it straight and hoping the tool reports a useful error is how a graph ends up with a
+red node that someone later "fixes" by deleting the branch.
+
+### Rule: ComponentMask is a cast, not a comment
+
+`MaterialExpressionComponentMask` is the only sanctioned way to change a pin's width or
+channel order, and it has three behaviours that catch people:
+
+1. **The output width is the number of enabled channels, not 1.** A mask with R and G
+   enabled outputs a float2. Feed that into a scalar input and it is the same downcast
+   error as above. If a mask is there to "take R", exactly one flag may be on.
+2. **The default is R and G, not R.** A freshly created mask silently produces a float2
+   until `r/g/b/a` are set explicitly. Always set all four flags at creation.
+   ```python
+   m = MEL.create_material_expression(mat, unreal.MaterialExpressionComponentMask, x, y)
+   m.set_editor_property("r", True)
+   m.set_editor_property("g", False)   # without this the default leaves G on
+   m.set_editor_property("b", False)
+   m.set_editor_property("a", False)
+   ```
+3. **It cannot reorder.** A mask preserves the original channel order, so BGR is not
+   expressible with one mask. Reordering needs two masks and an `AppendVector`, and each
+   half must be a single channel or the append produces the wrong width.
+
+Corollary: never use a mask to "clean up" a graph visually. Every mask is a real cast and
+changes the type flowing downstream.
+
+### Rule: a material edit is not finished until it compiles clean
+
+`recompile_material` returns a bool, and a `False` there is a hard failure - the material
+did not compile and the render will fall back. Treat it exactly like a failed build:
+
+```python
+ok = MEL.recompile_material(mat)
+if not ok:
+    raise RuntimeError("material did not compile - do not save, do not report success")
+```
+
+Then confirm from a place that cannot lie. The editor log records the real reason:
+
+```powershell
+Select-String -Path "<Project>/Saved/Logs/*.log" -Pattern "Error.*<MaterialName>|Cannot cast|Missing input"
+```
+
+Why this is a rule rather than advice: in this engine a shader compile failure surfaces
+as `Shader compilation failures are Fatal` at PSO creation, long after the edit looked
+successful, and the trace points at the renderer rather than at the graph that caused it.
+
+The order is fixed and not negotiable:
+
+```text
+wire  ->  recompile  ->  assert the returned bool  ->  scan the log  ->  save  ->  prove
+```
+
+Saving before the compile is asserted is how a broken graph reaches disk with a green
+checkmark next to it.
+
 ### Verified example graph
 
 `/Game/PluginsMakingAssets/Shaders/ParentsShaders/ObjectShader` - 71 nodes, 7 root pins

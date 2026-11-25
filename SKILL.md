@@ -45,8 +45,10 @@ immediately instead of three debugging cycles later.
 1. BACKUP       copy the .uasset out, record size + SHA256
 2. PROBE        learn real node ids, function paths, pin names - never guess
 3. MUTATE       route-specific calls; create graphs and nodes, wire pins
+                (materials: no edge until both ends' component count is known - see R12)
 4. LAYOUT       position everything on the hand-wired grid (references/40-hand-wired-style.md)
 5. ASSERT       error-node list empty, then compile, then status is BS_UP_TO_DATE
+                (materials: assert recompile_material() returned True AND the log is clean)
 6. SAVE         in the SAME run
 7. PROVE        disk SHA256 changed AND mtime changed AND a FRESH process reads it back
 8. AUDIT        run scripts/analyze_graph_layout.py on a dump of the result
@@ -137,4 +139,11 @@ VERDICT: PASS (no blocking defect)
 7. **Verify in a fresh process.** Same-session checks lie.
 8. **Lay out what you create.** An unreadable graph is a defective deliverable.
 9. **Say what you could not verify.** Rendering, real input and built Slate widgets are not
-   checkable headlessly.
+     checkable headlessly.
+10. **Type every pin before wiring it.** Material pins carry a component count and only
+    the upcast is implicit. A float4 into a float3 input needs an explicit `ComponentMask`
+    or the material compiles red while the Python call reports success. `ComponentMask`
+    defaults to R+G, so set all four flags at creation.
+11. **A graph you cannot compile is not a deliverable.** For materials that means
+    `recompile_material()` returning True *and* a clean `Saved/Logs` scan, before the save
+    and not after it.
