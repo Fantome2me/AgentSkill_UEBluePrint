@@ -94,7 +94,7 @@ VERDICT: PASS (no blocking defect)
 
 ---
 
-## 九条不可妥协的规则
+## 十一条不可妥协的规则
 
 1. **API 返回成功 ≠ 编辑成功。** 每次写入都要用「磁盘哈希变化 + mtime 变化 + 新进程读回」三件套证明。
 2. **任何写入都必须先关编辑器。**
@@ -150,23 +150,46 @@ AgentSkill_UEBluePrint/
 
 ---
 
-## 六代演进
+## 版本演进（1.0.0 → 1.0.7）
 
-这个技能不是一次写成的。仓库的 **Release 里按时间顺序放了全部六代**，可以直接看到每一代改了什么。
+这个技能不是一次写成的。**Release `v1.0.7` 里放了完整的八个版本**，每个一个压缩包，
+按版本号命名，可以直接对照每一版改了什么。
 
-| # | 代 | 文件 | 体积 | 这一代做了什么 |
+| 版本 | 前身代号 | 文件 | 体积 | 这一版做了什么 |
 |---|---|---|---|---|
-| 1 | `UE_BP_Skill_Pre0` | 8 | 49 KB | 第一版：把一次真实项目的经验直接写成 `SKILL.md` + `rules.md` + `templates.md`，配一个单体脚本 `ue_bp.py`（共享 helper）和 `run_one.py` |
-| 2 | `UE_BP_Skill_Pre1` | 5 | 43 KB | 拆结构：`SKILL.md` 保持精简，内容移进 `references/`；补上 `MCP_DESCRIPTION.md` |
-| 3 | `UE_BP_Skill_Pre2` | 5 | 87 KB | 引入**机器可读**：新增 `blueprint_api.json`（45 KB），把 API 从散文变成可查表 |
-| 4 | `UE_BP_Skill_Pre3` | 4 | 86 KB | 实测扩充：`ue-bp-ops.md` 涨到 26.8 KB，`mcp.md` 涨到 22.6 KB，补进大量实测记录 |
-| 5 | `ue-bp-skill-test` | 10 | 157 KB | 重新编号组织：`10-api` / `11-parameter-formats` / `12-templates` / `13-driver` / `20-rules` / `21-adjacent-systems` / `30-provenance`，API 表扩到 67 KB |
-| 6 | **`ue-bp-skill-v2`** | **15** | **217 KB** | **最终版**：新增 `00-router`（先路由）、`40-hand-wired-style`（实测排版规则）、`45-material-and-other-graphs`，以及排版审计脚本 `analyze_graph_layout.py` |
+| **1.0.0** | `UE_BP_Skill_Pre0` | 8 | 49 KB | 第一版，纯散文：`SKILL.md` + `rules.md` + `templates.md`，配单体脚本 `ue_bp.py` |
+| **1.0.1** | `UE_BP_Skill_Pre1` | 6 | 44 KB | 拆结构：`SKILL.md` 只留入口，细节进 `references/` |
+| **1.0.2** | `UE_BP_Skill_Pre2` | 5 | 87 KB | 引入**机器可读**：`blueprint_api.json`（45 KB） |
+| **1.0.3** | `UE_BP_Skill_Pre3` | 4 | 86 KB | 实测扩充，`ue-bp-ops.md` 涨到 26.8 KB |
+| **1.0.4** | `ue-bp-skill-test` | 11 | 159 KB | 重新编号组织（`10-api` … `30-provenance`），API 表扩到 67 KB |
+| **1.0.5** | `ue-bp-skill-v2` | 16 | 220 KB | **路由器 + 排版纪律**：`00-router`、`40-hand-wired-style`、`analyze_graph_layout.py` |
+| **1.0.6** | 提交 `81f2cdf` | 22 | 350 KB | 加仓库封面图、`docs/social_preview.png`，修正"十步循环"计数 |
+| **1.0.7** | 提交 `7aa0644` | 22 | 357 KB | **新增 R12 / R13**：材质 pin 的 float/float2/float3/float4 类型规则、`ComponentMask` 三个坑、材质必须编译干净才算完成 |
 
-**演进的主线**：散文经验 → 结构化的散文 → 机器可读的表 → 实测数据 → **先分类再动手 + 可审计的排版**。
+**演进的主线**：散文经验 → 结构化的散文 → 机器可读的表 → 实测数据 → 先分类再动手 + 可审计的排版 → **把重复踩的坑写成硬规则**。
 
----
+### 1.0.7 新增的两条硬规则
 
+材质编写里反复发生的两类错误，之前完全没覆盖：
+
+**R12 — 接线前必须知道每个 pin 的通道数。** 类型转换不对称，这个不对称就是坑：
+
+| 转换 | 允许 | 结果 |
+|---|---|---|
+| scalar → 2/3/4 | 隐式 | 广播 |
+| 2 → 3/4，3 → 4 | 隐式 | 尾部补 0 |
+| 4 → 3 → 2 → 1 | **拒绝** | `Cannot cast from larger float type to smaller float type` |
+
+一句话：**降维必须显式 `ComponentMask`，升维不需要。**
+`ComponentMask` 的三个坑：输出宽度 = 启用通道数（不是 1）、默认是 **R+G**（不是 R）、**不能重排通道**。
+
+**R13 — 材质没编译干净就不算做完。**
+
+```
+wire → recompile → 断言返回值 → 扫 Saved/Logs → save → prove
+```
+
+`recompile_material()` 返回 bool，`False` 是硬失败。不在保存前断言，等于把坏图连同成功报告一起写盘。
 ## 安装 / 使用
 
 这是一个 Agent Skill，不是一个 UE 插件。装到你的 agent 技能目录即可，或直接把 `SKILL.md`
